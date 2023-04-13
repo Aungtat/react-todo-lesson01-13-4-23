@@ -105,7 +105,7 @@ const App = () => {
             }}
             onClick={onAddTask}
           >
-            Add task
+            {isSearching ? "Show task" : "Add task"}
           </button>
           <button
             style={{
