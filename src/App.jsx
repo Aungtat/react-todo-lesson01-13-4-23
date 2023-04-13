@@ -5,16 +5,22 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [toEditTodo, SetToEditTodo] = useState({});
   const [isEdit, setIsEdit] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [foundedTask, setFoundedTask] = useState([]);
   const onAddTask = () => {
-    setTodos([
-      ...todos,
-      {
-        id: Math.random(),
-        taskName: todoValue,
-        isFinished: false,
-      },
-    ]);
-    setTodoValue("");
+    if (todoValue) {
+      setTodos([
+        ...todos,
+        {
+          id: Math.random(),
+          taskName: todoValue,
+          isFinished: false,
+        },
+      ]);
+      setTodoValue("");
+    }
+
+    setIsSearching(false);
   };
 
   const onDoneById = (id) => {
@@ -54,10 +60,20 @@ const App = () => {
     const editedTodo = todos.find((todo) => todo.id === toEditTodo.id);
     if (editedTodo) {
       editedTodo.taskName = todoValue;
-      setTodos([...todos]);
+
       setTodoValue("");
       setIsEdit(!isEdit);
     }
+  };
+
+  //search task
+  const onSearchTask = () => {
+    const searchedTodos = todos.filter((todo) =>
+      todo.taskName.includes(todoValue)
+    );
+    setIsSearching(true);
+    setTodoValue("");
+    setFoundedTask(searchedTodos);
   };
 
   return (
@@ -82,14 +98,24 @@ const App = () => {
 
       {/* check on edit state or on add state */}
       {!isEdit ? (
-        <button
-          style={{
-            height: "30px",
-          }}
-          onClick={onAddTask}
-        >
-          Add task
-        </button>
+        <>
+          <button
+            style={{
+              height: "30px",
+            }}
+            onClick={onAddTask}
+          >
+            Add task
+          </button>
+          <button
+            style={{
+              height: "30px",
+            }}
+            onClick={onSearchTask}
+          >
+            Search task
+          </button>
+        </>
       ) : (
         <button
           style={{
@@ -103,69 +129,134 @@ const App = () => {
 
       <div>
         {/* loop todos array */}
-        {todos.map((todo) => {
-          return (
-            <div
-              key={todo.id}
-              style={{
-                margin: "5px",
-                backgroundColor: "green",
-                color: "white",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              {/* line-through for finish todos */}
-              {todo.isFinished && (
-                <span
-                  style={{
-                    margin: "5px",
-                    borderBottom: "1px solid balck",
-                    padding: "2px",
-                    color: "black",
-                    textDecoration: "line-through",
-                  }}
-                >
-                  {todo.taskName}
-                </span>
-              )}
+        {isSearching &&
+          foundedTask.map((todo) => {
+            return (
+              <div
+                key={todo.id}
+                style={{
+                  margin: "5px",
+                  backgroundColor: "green",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* line-through for finish todos */}
+                {todo.isFinished && (
+                  <span
+                    style={{
+                      margin: "5px",
+                      borderBottom: "1px solid balck",
+                      padding: "2px",
+                      color: "black",
+                      textDecoration: "line-through",
+                    }}
+                  >
+                    {todo.taskName}
+                  </span>
+                )}
 
-              {!todo.isFinished && (
-                <span
-                  style={{
-                    margin: "5px",
-                    borderBottom: "1px solid balck",
-                    padding: "2px",
-                  }}
-                >
-                  {todo.taskName}
-                </span>
-              )}
+                {!todo.isFinished && (
+                  <span
+                    style={{
+                      margin: "5px",
+                      borderBottom: "1px solid balck",
+                      padding: "2px",
+                    }}
+                  >
+                    {todo.taskName}
+                  </span>
+                )}
 
-              <div>
-                <button onClick={() => onDoneById(todo.id)}>
-                  {todo.isFinished ? "UNDO" : "DONE"}
-                </button>
-                <button
-                  style={{
-                    margin: "5px",
-                  }}
-                  onClick={() => onDelete(todo.id)}
-                >
-                  DELETE
-                </button>
-                <button
-                  style={{
-                    margin: "5px",
-                  }}
-                  onClick={() => onEdit(todo.id)}
-                >
-                  EDIT
-                </button>
+                <div>
+                  <button onClick={() => onDoneById(todo.id)}>
+                    {todo.isFinished ? "UNDO" : "DONE"}
+                  </button>
+                  <button
+                    style={{
+                      margin: "5px",
+                    }}
+                    onClick={() => onDelete(todo.id)}
+                  >
+                    DELETE
+                  </button>
+                  <button
+                    style={{
+                      margin: "5px",
+                    }}
+                    onClick={() => onEdit(todo.id)}
+                  >
+                    EDIT
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        {!isSearching &&
+          todos.map((todo) => {
+            return (
+              <div
+                key={todo.id}
+                style={{
+                  margin: "5px",
+                  backgroundColor: "green",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* line-through for finish todos */}
+                {todo.isFinished && (
+                  <span
+                    style={{
+                      margin: "5px",
+                      borderBottom: "1px solid balck",
+                      padding: "2px",
+                      color: "black",
+                      textDecoration: "line-through",
+                    }}
+                  >
+                    {todo.taskName}
+                  </span>
+                )}
+
+                {!todo.isFinished && (
+                  <span
+                    style={{
+                      margin: "5px",
+                      borderBottom: "1px solid balck",
+                      padding: "2px",
+                    }}
+                  >
+                    {todo.taskName}
+                  </span>
+                )}
+
+                <div>
+                  <button onClick={() => onDoneById(todo.id)}>
+                    {todo.isFinished ? "UNDO" : "DONE"}
+                  </button>
+                  <button
+                    style={{
+                      margin: "5px",
+                    }}
+                    onClick={() => onDelete(todo.id)}
+                  >
+                    DELETE
+                  </button>
+                  <button
+                    style={{
+                      margin: "5px",
+                    }}
+                    onClick={() => onEdit(todo.id)}
+                  >
+                    EDIT
+                  </button>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
