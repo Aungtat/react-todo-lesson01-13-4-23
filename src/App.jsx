@@ -181,14 +181,16 @@ const App = () => {
                   >
                     DELETE
                   </button>
-                  <button
-                    style={{
-                      margin: "5px",
-                    }}
-                    onClick={() => onEdit(todo.id)}
-                  >
-                    EDIT
-                  </button>
+                  {!todo.isFinished && (
+                    <button
+                      style={{
+                        margin: "5px",
+                      }}
+                      onClick={() => onEdit(todo.id)}
+                    >
+                      EDIT
+                    </button>
+                  )}
                 </div>
               </div>
             );
@@ -245,14 +247,16 @@ const App = () => {
                   >
                     DELETE
                   </button>
-                  <button
-                    style={{
-                      margin: "5px",
-                    }}
-                    onClick={() => onEdit(todo.id)}
-                  >
-                    EDIT
-                  </button>
+                  {!todo.isFinished && (
+                    <button
+                      style={{
+                        margin: "5px",
+                      }}
+                      onClick={() => onEdit(todo.id)}
+                    >
+                      EDIT
+                    </button>
+                  )}
                 </div>
               </div>
             );
